@@ -15,20 +15,29 @@ if (my $perlbrew_path = which("perlbrew")) {
     my $perlbrew_root = $perlbrew_path;
     $perlbrew_root =~ s!/bin/perlbrew\z!!;
     my $out = `perlbrew list`;
-    #my @perls;
-    while ($out =~ /^\s*\*\s*(.+)/gm) {
-        #push @perls, $1;
-        push @$participants, (
-            {
-                name => "$1 -e1",
-                cmdline => ["$perlbrew_root/perls/$1/bin/perl", "-e1"],
-            },
-            {
-                name => "$1 -E1",
-                cmdline => ["$perlbrew_root/perls/$1/bin/perl", "-E1"],
-            },
-        );
+
+    my @perls;
+    while ($out =~ /^\s*\*?\s*(.+)/gm) {
+        push @perls, $1;
     }
+
+    for my $perl (@perls) {
+        my ($perl_ver) = $perl =~ /perl-(.+)/;
+
+        push @$participants, {
+            name => "$perl -e1",
+            cmdline => ["$perlbrew_root/perls/$perl/bin/perl", "-e1"],
+        };
+
+        if (version->parse($perl_ver) >= version->parse("5.10.0")) {
+            push @$participants, {
+                name => "$perl -E1",
+                cmdline => ["$perlbrew_root/perls/$perl/bin/perl", "-E1"],
+            };
+        }
+    }
+} else {
+    warn "Please install perlbrew so I can easily locate the different perls";
 }
 
 our $scenario = {
@@ -39,3 +48,14 @@ our $scenario = {
 
 1;
 # ABSTRACT:
+
+=head1 DESCRIPTION
+
+Conclusion: there is an increase of startup overhead for newer perl versions. If
+startup overhead is important to you, Use C<-e> instead of C<-E> unless
+necessary.
+
+
+=head1 SEE ALSO
+
+L<Bencher::Scenario::Interpreters>
