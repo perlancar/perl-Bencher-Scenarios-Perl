@@ -51,9 +51,9 @@ our $scenario = {
 
 =head1 DESCRIPTION
 
-Conclusion: there is an increase of startup overhead for newer perl versions. If
-startup overhead is important to you, Use C<-e> instead of C<-E> unless
-necessary.
+Conclusion: in general newer versions of perl has larger startup overhead than
+previous ones. If startup overhead is important to you, use C<-e> instead of
+C<-E> unless necessary.
 
 
 =head1 SEE ALSO
