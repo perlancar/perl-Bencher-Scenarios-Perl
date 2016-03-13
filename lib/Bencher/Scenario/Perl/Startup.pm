@@ -22,7 +22,12 @@ if (my $perlbrew_path = which("perlbrew")) {
     }
 
     for my $perl (@perls) {
-        my ($perl_ver) = $perl =~ /perl-(.+)/;
+        my ($perl_ver, $perl_variant) = $perl =~
+            /\A(?:perl-)?(\d+\.\d+\.\d+)(-\w+(?:-\w+)*)?/
+            or do {
+                warn "Can't parse perl version from `$perl`, skipped\n";
+                next;
+            };
 
         push @$participants, {
             name => "$perl -e1",
