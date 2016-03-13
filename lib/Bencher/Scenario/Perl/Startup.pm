@@ -7,42 +7,23 @@ use 5.010001;
 use strict;
 use warnings;
 
+use App::perlbrew;
 use File::Which;
 
 my $participants = [];
 
-if (my $perlbrew_path = which("perlbrew")) {
-    my $perlbrew_root = $perlbrew_path;
-    $perlbrew_root =~ s!/bin/perlbrew\z!!;
-    my $out = `perlbrew list`;
-
-    my @perls;
-    while ($out =~ /^\s*\*?\s*(.+)/gm) {
-        push @perls, $1;
-    }
-
-    for my $perl (@perls) {
-        my ($perl_ver, $perl_variant) = $perl =~
-            /\A(?:perl-)?(\d+\.\d+\.\d+)(-\w+(?:-\w+)*)?/
-            or do {
-                warn "Can't parse perl version from `$perl`, skipped\n";
-                next;
-            };
-
+my $pb = App::perlbrew->new;
+for my $perl ($pb->installed_perls) {
+    push @$participants, {
+        name => "$perl->{name} -e1",
+        cmdline => [$perl->{executable}, "-e1"],
+    };
+    if (version->parse($perl->{version}) >= version->parse("5.10.0")) {
         push @$participants, {
-            name => "$perl -e1",
-            cmdline => ["$perlbrew_root/perls/$perl/bin/perl", "-e1"],
+            name => "$perl->{name} -E1",
+            cmdline => [$perl->{executable}, "-E1"],
         };
-
-        if (version->parse($perl_ver) >= version->parse("5.10.0")) {
-            push @$participants, {
-                name => "$perl -E1",
-                cmdline => ["$perlbrew_root/perls/$perl/bin/perl", "-E1"],
-            };
-        }
     }
-} else {
-    warn "Please install perlbrew so I can easily locate the different perls";
 }
 
 our $scenario = {
