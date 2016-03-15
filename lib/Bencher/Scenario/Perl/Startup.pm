@@ -28,7 +28,7 @@ for my $perl ($pb->installed_perls) {
 
 our $scenario = {
     summary => 'Benchmark startup time of perls',
-    default_precision => 0.001,
+    default_precision => 0.005,
     participants => $participants,
 };
 
