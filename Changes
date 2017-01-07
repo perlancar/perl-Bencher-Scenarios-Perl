@@ -1,5 +1,3 @@
-Revision history for Bencher-Scenarios-Perl
-
 0.04    2016-03-15 (PERLANCAR)
 
         - Add scenarios: Perl::5200Perf_return, Perl::5220Perf_length.
