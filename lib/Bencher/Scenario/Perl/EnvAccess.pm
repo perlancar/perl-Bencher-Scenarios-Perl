@@ -14,6 +14,8 @@ our $scenario = {
         {name => 'read PATH' , code_template => '$ENV{PATH}'},
         {name => 'write FOO' , code_template => '$ENV{FOO}  = "/foo:/bar"'},
         {name => 'write PATH', code_template => '$ENV{PATH} = "/foo:/bar"'},
+        {name => 'locally write FOO' , code_template => 'local $ENV{FOO}  = "/foo:/bar"'},
+        {name => 'locally write PATH', code_template => 'local $ENV{PATH} = "/foo:/bar"'},
     ],
 };
 
