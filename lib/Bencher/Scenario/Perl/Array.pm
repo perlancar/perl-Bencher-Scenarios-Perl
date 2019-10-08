@@ -11,9 +11,11 @@ our $scenario = {
     summary => 'Benchmark array access',
     precision => 0.001,
     participants => [
-        {name => 'access' , code_template => 'no warnings "void"; state $ary = <array>; for (<firstelem>..<lastelem>) { $ary->[$_] }'},
-        {name => 'shift'  , code_template => 'my $ary = <array>; for (<firstelem>..<lastelem>) { shift @$ary }'},
-        {name => 'push'   , code_template => 'my $ary = []; for (<firstelem>..<lastelem>) { push @$ary, 0 }'},
+        {name => 'access'      , code_template => 'no warnings "void"; state $ary = <array>; for (<firstelem>..<lastelem>) { $ary->[$_] }'},
+        {name => 'shift'       , code_template => 'my $ary = <array>; for (<firstelem>..<lastelem>) { shift @$ary }'},
+        {name => 'splice-shift', code_template => 'my $ary = <array>; for (<firstelem>..<lastelem>) { splice @$ary, 0, 1 }'},
+        {name => 'push'        , code_template => 'my $ary = []; for (<firstelem>..<lastelem>) { push @$ary, 0 }'},
+        {name => 'splice-push' , code_template => 'my $ary = []; for (<firstelem>..<lastelem>) { splice @$ary, scalar(@$ary), 0, 0 }'},
     ],
     datasets => [
         {
